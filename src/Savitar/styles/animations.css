@@ -1,8 +1,124 @@
+/* =========================================================
+   FILE ITEM - ICONOS
+========================================================= */
 .file-item {
-  transition: transform .35s ease, filter .35s ease;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  color: #cfdcff;
 }
 
+/* Hover futurista */
 .file-item:hover {
-  transform: translateY(-6px) scale(1.06);
-  filter: drop-shadow(0 0 16px rgba(120,120,255,.7));
+  transform: translateY(-6px) scale(1.08);
+  filter: drop-shadow(0 0 20px rgba(0, 170, 255, 0.7));
+  box-shadow: 0 0 14px #0af, 0 0 28px rgba(10, 170, 255, 0.4);
+}
+
+/* Selección activa */
+.file-item.selected {
+  background-color: rgba(0, 60, 120, 0.6);
+  box-shadow: 0 0 18px #0af, 0 0 36px rgba(10, 170, 255, 0.5);
+}
+
+/* ICONO */
+.file-icon img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin-bottom: 6px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* LABEL */
+.file-label {
+  text-align: center;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   FILE GRID - ENTRADA ANIMADA
+========================================================= */
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 100px);
+  gap: 16px;
+  padding: 16px;
+  overflow-y: auto;
+  animation: fadeInGrid 0.4s ease forwards;
+}
+
+@keyframes fadeInGrid {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   SIDEBAR ITEM - HOVER Y ACTIVO
+========================================================= */
+.sidebar-item {
+  transition: all 0.25s ease;
+}
+
+.sidebar-item:hover {
+  background-color: rgba(10, 170, 255, 0.1);
+  box-shadow: 0 0 8px #0af, 0 0 12px rgba(10, 170, 255, 0.3);
+  transform: translateX(2px);
+}
+
+.sidebar-item.active {
+  background-color: rgba(0, 60, 120, 0.6);
+  box-shadow: 0 0 14px #0af, 0 0 28px rgba(10, 170, 255, 0.5);
+}
+
+/* =========================================================
+   PATH BAR / HEADER
+========================================================= */
+.path-item {
+  transition: all 0.25s ease;
+}
+
+.path-item:hover {
+  background-color: rgba(10, 170, 255, 0.1);
+  box-shadow: 0 0 8px #0af, 0 0 16px rgba(10, 170, 255, 0.3);
+  border-radius: 4px;
+}
+
+/* =========================================================
+   EXPLORER EMPTY STATES
+========================================================= */
+.explorer-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  opacity: 0;
+  animation: fadeInEmpty 0.5s ease forwards;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.empty-subtitle {
+  font-size: 12px;
+  color: #888;
+}
+
+@keyframes fadeInEmpty {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
 }

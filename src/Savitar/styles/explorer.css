@@ -1,20 +1,176 @@
+/* =========================================================
+   EXPLORER LAYOUT
+========================================================= */
 .explorer {
   display: flex;
   height: 100vh;
   background: radial-gradient(circle at top, #0b0f1a, #000);
   color: #cfd3ff;
-  font-family: 'Segoe UI', system-ui;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
 }
 
-.sidebar {
+/* =========================================================
+   SIDEBAR
+========================================================= */
+.explorer-sidebar {
   width: 260px;
-  background: rgba(10,10,30,.85);
+  background: rgba(10, 10, 30, 0.85);
   backdrop-filter: blur(12px);
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border-right: 1px solid rgba(30, 30, 60, 0.6);
 }
 
+/* =========================================================
+   MAIN AREA
+========================================================= */
 .explorer-main {
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+
+/* =========================================================
+   FILE GRID
+========================================================= */
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 100px); /* ancho fijo iconos */
+  gap: 16px; /* espacio entre iconos */
+  padding: 16px;
+  overflow-y: auto; /* scroll si hay muchos */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 170, 255, 0.3) transparent;
+}
+
+/* Scroll estilo Webkit */
+.file-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.file-grid::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 170, 255, 0.3);
+  border-radius: 4px;
+}
+
+.file-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* =========================================================
+   FILE ITEM
+========================================================= */
+.file-item {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  color: #cfdcff;
+}
+
+/* Hover y Glow futurista */
+.file-item:hover {
+  transform: translateY(-6px) scale(1.08);
+  filter: drop-shadow(0 0 20px rgba(0, 170, 255, 0.7));
+  box-shadow: 0 0 14px #0af, 0 0 28px rgba(10, 170, 255, 0.4);
+}
+
+/* Selección */
+.file-item.selected {
+  background-color: rgba(0, 60, 120, 0.6);
+  box-shadow: 0 0 18px #0af, 0 0 36px rgba(10, 170, 255, 0.5);
+}
+
+/* =========================================================
+   FILE ICON
+========================================================= */
+.file-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.file-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* =========================================================
+   FILE LABEL
+========================================================= */
+.file-label {
+  text-align: center;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   SIDEBAR ITEM
+========================================================= */
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #cfdcff;
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.sidebar-item:hover {
+  background-color: rgba(10, 170, 255, 0.1);
+  box-shadow: 0 0 8px #0af, 0 0 12px rgba(10, 170, 255, 0.3);
+  transform: translateX(2px);
+}
+
+.sidebar-item.active {
+  background-color: rgba(0, 60, 120, 0.6);
+  box-shadow: 0 0 14px #0af, 0 0 28px rgba(10, 170, 255, 0.5);
+}
+
+.sidebar-icon-wrapper {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.sidebar-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

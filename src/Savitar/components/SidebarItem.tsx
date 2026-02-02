@@ -17,8 +17,17 @@ export default function SidebarItem({
       onClick={onClick}
       type="button"
     >
-      {icon && <img src={icon} alt="" className="sidebar-icon" />}
-      <span className="sidebar-label">{label}</span>
+      {/* ICONO */}
+      {icon && (
+        <div className="sidebar-icon-wrapper">
+          <img src={icon} alt="" className="sidebar-icon" draggable={false} />
+        </div>
+      )}
+
+      {/* ETIQUETA */}
+      <span className="sidebar-label" title={label}>
+        {label}
+      </span>
     </button>
   );
 }

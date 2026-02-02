@@ -6,7 +6,6 @@ import { useExplorer } from '../state/explorer.store';
 /* =========================================================
    TYPES
 ========================================================= */
-
 type ExplorerNode = DeviceNode | FileNode;
 
 type FileItemProps = {
@@ -16,7 +15,6 @@ type FileItemProps = {
 /* =========================================================
    COMPONENT
 ========================================================= */
-
 export default function FileItem({ node }: FileItemProps) {
   const {
     openDevice,
@@ -26,7 +24,6 @@ export default function FileItem({ node }: FileItemProps) {
   } = useExplorer();
 
   const isSelected = selectedIds.includes(node.id);
-
   const isDevice = 'root' in node;
   const isFolder = !isDevice && node.type === 'folder';
   const isFile = !isDevice && node.type === 'file';
@@ -34,7 +31,6 @@ export default function FileItem({ node }: FileItemProps) {
   /* =========================================================
      EVENTS
   ========================================================= */
-
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     toggleSelect(node.id, e.ctrlKey || e.metaKey);
@@ -46,31 +42,23 @@ export default function FileItem({ node }: FileItemProps) {
     // archivos → fase futura (modal abrir / descargar)
   };
 
-
-  
   /* =========================================================
      ICON
   ========================================================= */
-
   const icon =
-  isDevice
-    ? node.icon
-    : isFolder
-      ? '/img/icons/folder.png'
-      : isFile
-        ? '/img/icons/file.png'
-        : '/img/icons/file.png';
-
     isDevice
       ? node.icon
       : isFolder
         ? '/img/icons/folder.png'
         : '/img/icons/file.png';
+        isFile
+        ? '/img/icons/file.png'
+        : '/img/icons/file.png';
+        
 
   /* =========================================================
      RENDER
   ========================================================= */
-
   return (
     <div
       className={`file-item ${isSelected ? 'selected' : ''}`}
@@ -79,11 +67,13 @@ export default function FileItem({ node }: FileItemProps) {
       role="button"
       tabIndex={0}
     >
+      {/* ICONO */}
       <div className="file-icon">
         <img src={icon} alt="" draggable={false} />
       </div>
 
-      <div className="file-label">
+      {/* NOMBRE */}
+      <div className="file-label" title={node.name}>
         {node.name}
       </div>
     </div>

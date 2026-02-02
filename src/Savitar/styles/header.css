@@ -1,0 +1,87 @@
+/* =========================================================
+   EXPLORER HEADER
+========================================================= */
+.explorer-header {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background-color: rgba(10, 10, 30, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(30, 30, 60, 0.6);
+  color: #cfdcff;
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+}
+
+/* =========================================================
+   PATH BAR / BREADCRUMB
+========================================================= */
+.path-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 170, 255, 0.3) transparent;
+}
+
+/* Webkit scrollbar */
+.path-bar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.path-bar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 170, 255, 0.3);
+  border-radius: 3px;
+}
+
+.path-bar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Path items */
+.path-item {
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-block;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.path-item:hover {
+  background-color: rgba(10, 170, 255, 0.1);
+  box-shadow: 0 0 6px #0af, 0 0 10px rgba(10, 170, 255, 0.3);
+}
+
+/* Separador */
+.separator {
+  margin: 0 4px;
+  color: #6b6b6b;
+  user-select: none;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 768px) {
+  .explorer-header {
+    padding: 0 8px;
+    font-size: 12px;
+  }
+
+  .path-item {
+    max-width: 120px;
+    font-size: 12px;
+  }
+
+  .separator {
+    margin: 0 2px;
+  }
+}

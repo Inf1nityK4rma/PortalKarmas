@@ -1,34 +1,58 @@
 import { useExplorer } from '../state/explorer.store';
 
-export default function PathBar() {
-  const { currentDevice, currentPath, goHome, goToPathIndex } = useExplorer();
+/* =========================================================
+   EXPLORER HEADER
+   Barra de ruta tipo Windows (Path Bar)
+========================================================= */
+
+export default function ExplorerHeader() {
+  const {
+    currentDevice,
+    currentPath,
+    goHome,
+    goToPathIndex,
+  } = useExplorer();
 
   return (
-    <nav className="path-bar">
-      <span className="path-item home" onClick={goHome}>
-        Este equipo
-      </span>
-
-      {currentDevice && (
-        <>
-          <span className="separator">›</span>
-          <span className="path-item">
-            {currentDevice.name}
-          </span>
-        </>
-      )}
-
-      {currentPath.map((folder, index) => (
-        <span key={folder.id}>
-          <span className="separator">›</span>
-          <span
-            className="path-item"
-            onClick={() => goToPathIndex(index)}
-          >
-            {folder.name}
-          </span>
+    <header className="explorer-header">
+      <nav className="path-bar">
+        {/* RAÍZ: ESTE EQUIPO */}
+        <span
+          className="path-item root"
+          onClick={goHome}
+        >
+          Este equipo
         </span>
-      ))}
-    </nav>
+
+        {/* DISPOSITIVO */}
+        {currentDevice && (
+          <>
+            <span className="separator">›</span>
+            <span
+              className="path-item device"
+              onClick={() => goToPathIndex(-1)}
+            >
+              {currentDevice.name}
+            </span>
+          </>
+        )}
+
+        {/* CARPETAS */}
+        {currentPath.map((folder, index) => (
+          <span
+            key={folder.id}
+            className="path-segment"
+          >
+            <span className="separator">›</span>
+            <span
+              className="path-item folder"
+              onClick={() => goToPathIndex(index)}
+            >
+              {folder.name}
+            </span>
+          </span>
+        ))}
+      </nav>
+    </header>
   );
 }

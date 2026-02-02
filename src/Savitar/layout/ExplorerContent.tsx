@@ -3,37 +3,59 @@ import FileGrid from '../components/FileGrid';
 
 /* =========================================================
    EXPLORER CONTENT
+   Área central del explorador (tipo Windows)
 ========================================================= */
 
 export default function ExplorerContent() {
   const {
     currentItems,
     currentDevice,
+    currentPath,
   } = useExplorer();
 
-  // Estado inicial: ningún dispositivo seleccionado
+  /* ---------------------------------------------
+     ESTADO: NO HAY DISPOSITIVO SELECCIONADO
+     (Vista "Mis equipos")
+  --------------------------------------------- */
   if (!currentDevice) {
     return (
-      <div className="explorer-empty">
-        <span className="empty-title">Mis equipos</span>
-        <span className="empty-subtitle">
-          Selecciona un dispositivo para comenzar
-        </span>
-      </div>
+      <section className="explorer-content">
+        <div className="explorer-empty">
+          <span className="empty-title">Mis equipos</span>
+          <span className="empty-subtitle">
+            Selecciona un dispositivo para comenzar
+          </span>
+        </div>
+      </section>
     );
   }
 
-  // Dispositivo seleccionado pero sin contenido
+  /* ---------------------------------------------
+     ESTADO: DISPOSITIVO SELECCIONADO
+     PERO CARPETA VACÍA
+  --------------------------------------------- */
   if (!currentItems || currentItems.length === 0) {
     return (
-      <div className="explorer-empty">
-        <span className="empty-title">Carpeta vacía</span>
-        <span className="empty-subtitle">
-          No hay elementos en esta ubicación
-        </span>
-      </div>
+      <section className="explorer-content">
+        <div className="explorer-empty">
+          <span className="empty-title">Carpeta vacía</span>
+          <span className="empty-subtitle">
+            No hay elementos en esta ubicación
+          </span>
+        </div>
+      </section>
     );
   }
 
-  return <FileGrid items={currentItems} />;
+  /* ---------------------------------------------
+     ESTADO: CONTENIDO NORMAL
+  --------------------------------------------- */
+  return (
+    <section className="explorer-content">
+      <FileGrid
+        items={currentItems}
+        key={currentPath.join('/')}
+      />
+    </section>
+  );
 }
