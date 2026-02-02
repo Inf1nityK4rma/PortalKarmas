@@ -81,6 +81,7 @@ function App() {
         <Route path="/savitar" element={<Rayo />} />
         <Route path="/soma" element={<Lobo />} />
         <Route path="/stephen" element={<Atomo />} />
+        <Route path="/img" />
       </Routes>
     </>
   );
