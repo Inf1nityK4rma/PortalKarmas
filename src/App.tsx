@@ -61,7 +61,7 @@ color:'white'
       <h1 style={{ fontStyle: 'italic' }}>
         FSDFISDFJSAI
         </h1> 
-        <img src="/xd.png" alt="Puto" width={200} />
+        <img src="/tutorialEPICO/xd.png" alt="Puto" width={200} />
 </div>
 
     </>
