@@ -1,137 +1,187 @@
-import { Routes, Route } from 'react-router-dom';
-import Home from './Home';
-import Rayo from './Savitar/rayo';
-import Lobo from './Soma/lobo';
-import Atomo from './Stephen/atomo';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function App() {
+/* =========================================================
+   DATA – ICONOS / RUTAS
+========================================================= */
+const CARDS = [
+  { src: '/img/icono1.png', path: '/savitar', label: 'Savitar' },
+  { src: '/img/icono2.png', path: '/soma', label: 'Soma' },
+  { src: '/img/icono3.png', path: '/stephen', label: 'Stephen' },
+];
+
+export default function Home() {
+  const navigate = useNavigate();
+
+  /* =========================================================
+     REFS
+  ========================================================= */
+  const mainRef = useRef<HTMLDivElement | null>(null);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const portalRef = useRef<HTMLDivElement | null>(null);
+
+  /* =========================================================
+     STATE – CAROUSEL 3D MÓVIL
+  ========================================================= */
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  /* =========================================================
+     EFECTO PRINCIPAL – AUDIO + LOADER + MANIFESTACIÓN
+  ========================================================= */
+  useEffect(() => {
+    document.body.setAttribute('data-loading', 'true');
+
+    const ambient = document.getElementById('ambient') as HTMLAudioElement | null;
+    const hum = document.getElementById('hum') as HTMLAudioElement | null;
+
+    if (ambient) {
+      ambient.volume = 0.28;
+      ambient.play().catch(() => {});
+    }
+
+    if (hum) {
+      hum.volume = 0.35;
+      hum.play().catch(() => {});
+    }
+
+    const loader = loaderRef.current;
+    const main = mainRef.current;
+
+    const loaderTimeout = setTimeout(() => {
+      if (loader) loader.style.opacity = '0';
+
+      const showTimeout = setTimeout(() => {
+        if (loader) loader.style.display = 'none';
+        if (main) main.style.display = 'flex';
+        document.body.setAttribute('data-loading', 'false');
+      }, 2000);
+
+      return () => clearTimeout(showTimeout);
+    }, 2200);
+
+    return () => clearTimeout(loaderTimeout);
+  }, []);
+
+  /* =========================================================
+     SLIDER 3D VERTICAL – SOLO MÓVIL (SWIPE)
+  ========================================================= */
+  useEffect(() => {
+    let startY = 0;
+
+    const onTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY;
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      const delta = startY - e.changedTouches[0].clientY;
+
+      if (delta > 50) {
+        setActiveIndex(i => Math.min(i + 1, CARDS.length - 1));
+      } else if (delta < -50) {
+        setActiveIndex(i => Math.max(i - 1, 0));
+      }
+    };
+
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchend', onTouchEnd);
+    };
+  }, []);
+
+  /* =========================================================
+     PORTAL / NAVEGACIÓN
+  ========================================================= */
+  const openPortal = (path: string) => {
+    const whoosh = document.getElementById('whoosh') as HTMLAudioElement | null;
+    const portalSound = document.getElementById('portal-sound') as HTMLAudioElement | null;
+
+    if (whoosh) {
+      whoosh.currentTime = 0;
+      whoosh.play().catch(() => {});
+    }
+
+    if (portalSound) {
+      portalSound.currentTime = 0;
+      portalSound.play().catch(() => {});
+    }
+
+    portalRef.current?.classList.add('active');
+
+    setTimeout(() => {
+      navigate(path);
+    }, 1600);
+  };
+
+  /* =========================================================
+     RENDER
+  ========================================================= */
   return (
     <>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-            :root {
-              --bg-red: #1a0000;
-              --dark-overlay: rgba(10, 0, 0, 0.75);
-            }
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            html, body, #root { height: 100%; overflow: hidden; }
-            body {
-              background: var(--bg-red) url('background.jpg') no-repeat center center fixed;
-              background-size: cover;
-              font-family: 'Courier New', monospace;
-              color: #ccc;
-              cursor: url('/img/cursor.png'), auto;
-            }
-
-            #cloud-layer { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
-            .cloud {
-              position: absolute; width: 200%; height: 100%;
-              background: url('/img/nubes.png') repeat-x;
-              opacity: 0.45;
-              filter: brightness(0.35) contrast(1.1) saturate(0.6);
-              animation: drift 240s linear infinite;
-            }
-            .cloud2 { animation-delay: -120s; }
-            @keyframes drift { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-            #loader { position: fixed; inset: 0; background: var(--dark-overlay); display: flex; align-items: center; justify-content: center; z-index: 200; transition: opacity 2s ease-out; }
-            #loader video { 
-              width: 180px; 
-              max-width: 220px; 
-              filter: none; 
-              opacity: 0.4; /* ← Opacidad agregada */
-              animation: latentPulse 4s ease-in-out infinite; 
-            }
-            @keyframes latentPulse { 0%, 100% { transform: scale(0.92) rotate(0deg); } 50% { transform: scale(1.08) rotate(8deg); } }
-
-            #main { 
-              position: fixed; inset: 0; display: none; align-items: center; justify-content: center; 
-              gap: 180px; z-index: 50; padding: 0 40px;
-            }
-            .symbol { 
-              width: 160px; cursor: pointer; opacity: 0; transform: scale(0.3) translateY(40px); 
-              transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s; 
-              filter: drop-shadow(0 0 20px rgba(80, 0, 0, 0.6)); 
-              animation: manifest 1.8s forwards; 
-            }
-            .symbol:nth-child(1) { animation-delay: 0.4s; }
-            .symbol:nth-child(2) { animation-delay: 0.9s; }
-            .symbol:nth-child(3) { animation-delay: 1.4s; }
-            @keyframes manifest { to { opacity: 1; transform: scale(1) translateY(0); } }
-
-            /* Hover suave y natural (crecimiento sin reinicio) */
-            .symbol:hover {
-              transform: scale(1.15);
-              filter: drop-shadow(0 0 50px rgba(180, 0, 0, 0.9));
-              transition: transform 0.3s ease-in-out;
-            }
-
-            #portal { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 150; display: flex; align-items: center; justify-content: center; transition: opacity 1.2s ease; }
-            .swirl { width: 80px; height: 80px; background: conic-gradient(#000, #111 20%, #000 40%, #111 60%, #000 80%, #111); border-radius: 50%; animation: vortex 6s linear infinite; transform: scale(0); box-shadow: 0 0 80px 30px rgba(0,0,0,0.95); transition: transform 2.2s cubic-bezier(0.25,0.1,0.25,1); }
-            @keyframes vortex { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-            #portal.active { opacity: 1; pointer-events: auto; }
-            #portal.active .swirl { transform: scale(28); }
-
-            /* ==================== RESPONSIVE ==================== */
-            @media (max-width: 900px) {
-              #main {
-                gap: 40px;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                padding: 60px 20px;
-                -webkit-overflow-scrolling: touch;
-                perspective: 1000px; /* ← Perspectiva 3D para móvil */
-              }
-              .symbol {
-                width: 130px;
-                flex-shrink: 0;
-                scroll-snap-align: center;
-                transition: transform 0.5s ease-out;
-              }
-              .symbol:hover {
-                transform: scale(1.15);
-              }
-
-              /* Efecto 3D: Central grande/al frente, laterales pequeños/atrás */
-              #main .symbol:nth-child(1), #main .symbol:nth-child(3) {
-                transform: scale(0.7) translateZ(-200px); /* Laterales atrás */
-                opacity: 0.7;
-              }
-              #main .symbol:nth-child(2) {
-                transform: scale(1.2) translateZ(100px); /* Central al frente */
-              }
-            }
-          `,
-        }}
-      />
-
-      <div id="cloud-layer">
-        <div className="cloud"></div>
-        <div className="cloud cloud2"></div>
+      {/* ================= LOADER ================= */}
+      <div id="loader" ref={loaderRef}>
+        <video
+          className="loader-video"
+          src="/img/carga.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
       </div>
 
-      <audio id="ambient" loop preload="auto">
-        <source src="https://freesound.org/data/previews/371/371277_5121236-lq.mp3" type="audio/mpeg" />
-      </audio>
-      <audio id="hum" preload="auto">
-        <source src="https://www.soundjay.com/mechanical/sounds/transformer-1.mp3" type="audio/mpeg" />
-      </audio>
-      <audio id="whoosh" preload="auto">
-        <source src="https://freesound.org/data/previews/276/276951_5123856-lq.mp3" type="audio/mpeg" />
-      </audio>
-      <audio id="portal-sound" preload="auto">
-        <source src="https://freesound.org/data/previews/387/387186_5121236-lq.mp3" type="audio/mpeg" />
-      </audio>
+      {/* ================= PORTAL ================= */}
+      <div id="portal" ref={portalRef}>
+        <div className="swirl" />
+      </div>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/savitar" element={<Rayo />} />
-        <Route path="/soma" element={<Lobo />} />
-        <Route path="/stephen" element={<Atomo />} />
-      </Routes>
+      {/* ================= DESKTOP – ICONOS CON HOVER ================= */}
+      <div id="main" ref={mainRef}>
+        {CARDS.map(card => (
+          <div
+            key={card.label}
+            className="symbol-wrap"
+            onClick={() => openPortal(card.path)}
+          >
+            <img
+              src={card.src}
+              className="symbol"
+              draggable={false}
+              alt={card.label}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* ================= MÓVIL – 3D VERTICAL CAROUSEL ================= */}
+      <div className="carousel-3d">
+        {CARDS.map((card, index) => {
+          const offset = index - activeIndex;
+
+          return (
+            <img
+              key={card.label}
+              src={card.src}
+              className="carousel-card"
+              style={{
+                transform: `
+                  translateY(${offset * 140}px)
+                  translateZ(${offset === 0 ? 140 : -160}px)
+                  rotateX(${offset * -28}deg)
+                  scale(${offset === 0 ? 1.15 : 0.85})
+                `,
+                opacity: offset === 0 ? 1 : 0.45,
+                zIndex: 10 - Math.abs(offset),
+              }}
+              draggable={false}
+              onClick={() => offset === 0 && openPortal(card.path)}
+              alt={card.label}
+            />
+          );
+        })}
+      </div>
     </>
   );
 }
-
-export default App;

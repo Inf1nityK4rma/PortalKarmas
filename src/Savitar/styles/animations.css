@@ -1,0 +1,8 @@
+.file-item {
+  transition: transform .35s ease, filter .35s ease;
+}
+
+.file-item:hover {
+  transform: translateY(-6px) scale(1.06);
+  filter: drop-shadow(0 0 16px rgba(120,120,255,.7));
+}
